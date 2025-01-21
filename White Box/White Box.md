@@ -1,0 +1,3 @@
+# Rôle WhiteBox : Audit du Système BLE
+
+Le rôle de l'agent **WhiteBox** est d’auditer le système de Liste d'appel par détecteur Bluetooth Low Energy (BLE) pour évaluer sa robustesse, sa sécurité et son efficacité. En ayant un accès complet au code source, aux configurations et à l’architecture, l'agent WhiteBox identifie les vulnérabilités potentielles, évalue les performances, et propose des recommandations.
