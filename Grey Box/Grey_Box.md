@@ -10,7 +10,7 @@ Dans cette position et ce contexte, nous sommes des étudiants disposant de cert
 
 ---
 
-## Première approche  
+## Première approche  le WIFI
 
 Pour une première approche, nous avons adopté une stratégie visant à collecter un maximum d’informations sur les hôtes disponibles sur le réseau WiFi.  
 Pour ce faire, nous avons utilisé l’outil **Nmap**, qui permet de réaliser une cartographie réseau et d’identifier les services actifs sur les équipements connectés.
@@ -79,10 +79,77 @@ Nous avons ainsi appris à cartographier un réseau, à identifier les appareils
 Dans cette section, nous allons créer un script pour :  
 1. Identifier les appareils spécifiques que nous recherchons.  
 2. Scanner leurs ports ouverts.  
-3. Automatiser des tentatives de connexion ou de récupération d’informations.  
+
+```bash
+#!/bin/bash
+
+# Script pour détecter une Raspberry Pi et un ESP32 sur un réseau local
+# Utilise nmap pour scanner et identifier les appareils
+
+# Demander la plage d'adresses IP à scanner
+read -p "Entrez la plage IP (ex: 192.168.1.0/24) : " network_range
+
+echo "Scanning le réseau $network_range à la recherche de votre Raspberry Pi et ESP32..."
+echo "Cela peut prendre un moment, merci de patienter."
+
+# Effectuer un scan des appareils connectés
+scan_results=$(nmap -sn $network_range)
+
+# Détection de la Raspberry Pi ATTENTION LES PARAMS NE SONT PAS BON
+raspberry_ip=$(echo "$scan_results" | grep -i "raspberry" -B 2 | grep "Nmap scan report" | awk '{print $5}')
+
+if [ -z "$raspberry_ip" ]; then
+    echo "Aucune Raspberry Pi détectée sur le réseau $network_range."
+else
+    echo "Raspberry Pi détectée avec l'adresse IP : $raspberry_ip"
+    # Scanner les ports ouverts et détecter l'OS pour l'adresse IP de la Raspberry Pi
+    echo "Analyse des ports ouverts et du système d'exploitation pour $raspberry_ip..."
+    nmap -sS -sV -O $raspberry_ip
+fi
+
+# Détection de l'ESP32
+esp32_ip=$(echo "$scan_results" | grep -iE "ESP|Espressif" -B 2 | grep "Nmap scan report" | awk '{print $5}')
+
+if [ -z "$esp32_ip" ]; then
+    echo "Aucun ESP32 détecté sur le réseau $network_range."
+else
+    echo "ESP32 détecté avec l'adresse IP : $esp32_ip"
+    # Scanner les ports ouverts et détecter l'OS pour l'adresse IP de l'ESP32
+    echo "Analyse des ports ouverts et du système d'exploitation pour $esp32_ip..."
+    nmap -sS -sV -O $esp32_ip
+fi
+
+echo "Analyse terminée. Résultats ci-dessus."
+```
+#### Explication 
+
+Ce script détecte les **Raspberry Pi** et **ESP32** sur un réseau local en utilisant **nmap**. Voici ses étapes :
+
+1. **Demande de la plage IP à scanner** :
+   - L'utilisateur entre une plage d'adresses IP (ex. : `192.168.1.0/24`).
+
+2. **Scan des appareils actifs** :
+   - `nmap -sn` identifie les appareils connectés dans la plage IP donnée.
+
+3. **Recherche d'une Raspberry Pi** :
+   - Le script filtre les appareils dont le nom ou le système contient "x". A MODIFIER
+   - Si trouvé, il effectue un scan des ports ouverts et du système d'exploitation.
+
+4. **Recherche d'un ESP32** :
+   - Similaire à la Raspberry Pi, mais en recherchant "ESP" ou "Espressif".
+
+5. **Affichage des résultats** :
+   - Les IP des appareils détectés, ainsi que leurs ports et OS, sont affichés.
+
+6. **Fin du script** :
+   - Le script termine en affichant les résultats complets.
+
+---
+
 
 
 ### Conclusion de cette première approche
+
 
 
 ---
