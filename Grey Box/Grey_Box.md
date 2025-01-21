@@ -146,9 +146,112 @@ Ce script détecte les **Raspberry Pi** et **ESP32** sur un réseau local en uti
 
 ---
 
+### Utilisation de ces informations 
+
+#### Node-Red 
+Pour compromettre une Raspberry Pi exposant Node-RED sans mot de passe :
+
+1. **Accès à l'interface graphique** : 
+   - Par défaut, Node-RED est accessible via un navigateur web à l'adresse `http://<IP_Raspberry>:1880`.
+   - Si aucune authentification n'est configurée (ce qui est souvent le cas avec une installation basique), l'interface est librement accessible à quiconque connaît l'adresse IP de la Raspberry Pi.
+
+2. **Modifications malveillantes** :
+   - L'attaquant peut facilement modifier ou ajouter des flux dans Node-RED. Par exemple, il pourrait configurer un flux pour capturer des données sensibles, déployer des scripts malveillants, ou effectuer des actions non désirées sur d'autres appareils du réseau.
+
+**Conclusion** : Une installation de base de Node-RED sans mot de passe rend la Raspberry Pi vulnérable à des accès non autorisés, particulièrement dans un environnement réseau partagé comme c'est le cas ici.
+
+###.....
+a continuer
 
 
 ### Conclusion de cette première approche
+
+Cela fonctionne pour le wifi MAIS si la rasberry est en LAN alors cela fonctionnera de la meme manière mais l'attaquant devra etre sur le réseau LAN mais les leviers d'attaque son strictement les memes pour la rasberry PI mais les ESP ne sont plus accesible de cette manière la.
+
+
+## Seconde approche le Bluethooth 
+
+Pour une première approche avec Bluetooth, nous avons adopté une stratégie visant à collecter un maximum d'informations sur les appareils Bluetooth environnants.
+Nous avons utilisé des outils comme hcitool et bluetoothctl, qui permettent de scanner les appareils à portée et d’identifier les périphériques actifs.
+
+Le but ici est de savoir s'il est simple ou non de repérer les dispositifs Bluetooth tels que les ESP32 et les beacons diffusés par les téléphones des élèves, tout en comprenant leur fonctionnement. Nous avons également cherché à automatiser cette détection à l’aide d’un script pour identifier les appareils souhaités et extraire des informations utiles comme leurs adresses MAC et, dans certains cas, leurs noms ou UUID.
+
+### Exploration de base  
+La première étape consiste à comprendre les commandes de base. Nous avons testé la commande suivante pour lister toutes les adresses appareils bluethooth environnant avec leur MAC:
+
+```bash
+chima@raspi:~ $ hcitool scan
+Scanning ...
+        38:68:93:60:30:B9       CHIMAPC
+        9E:F3:46:D1:61:2A       BL5000
+```
+Cette commande nous permet de voir les appareils bluethooth visible ainsi que leur mac adress et leur nom.
+
+Nous faisons la meme chose pour le BLE (Bluethooth low energy) :
+
+```bash
+chima@raspi:~ $ sudo hcitool lescan
+LE Scan ...
+C4:F3:77:A3:2C:88 Modulo2
+01:70:14:6D:AC:1F (unknown)
+EC:81:93:2B:38:8C
+94:7B:AE:66:BF:51 (unknown)
+0D:89:55:A7:34:AA (unknown)
+C4:F3:77:A3:2C:88 (unknown)
+7B:B8:26:8E:04:E9 (unknown)
+FF:5C:55:2A:D2:B7 (unknown)
+EC:81:93:2B:38:8C (unknown)
+C7:06:4A:DC:5A:43 (unknown)
+4F:3A:C9:3E:FC:76 (unknown)
+4E:FA:E5:0D:E3:29 (unknown)
+5D:E2:3D:97:C4:73 (unknown)
+FC:E1:21:51:B1:57 (unknown)
+4E:FA:E5:0D:E3:29 (unknown)
+```
+Avec cette commande, nous pouvons voir tout les appareils envionnant grace a leur mac et leur nom si configurer 
+
+### Script et automatisation  
+
+Dans cette section, nous allons créer un script pour :  
+- Identifier les appareils spécifiques que nous recherchons ESP et beacons.  
+
+
+```bash
+#!/bin/bash
+
+# Activation de l'adaptateur Bluetooth
+echo "Activation de l'adaptateur Bluetooth..."
+sudo hciconfig hci0 up
+
+# Scanner les appareils BLE
+echo "Recherche des appareils BLE à proximité. Patientez..."
+ble_scan_results=$(sudo hcitool lescan --duplicates 2>/dev/null)
+
+# Filtrer les ESP32
+echo "Recherche des ESP32..."
+esp32_devices=$(echo "$ble_scan_results" | grep -i "ESP")
+
+# Filtrer les beacons
+echo "Recherche des beacons..."
+beacon_devices=$(echo "$ble_scan_results" | grep -i "Beacon")
+
+# Affichage des résultats
+if [ -n "$esp32_devices" ]; then
+    echo "ESP32 détectés :"
+    echo "$esp32_devices"
+else
+    echo "Aucun ESP32 détecté."
+fi
+
+if [ -n "$beacon_devices" ]; then
+    echo "Beacons détectés :"
+    echo "$beacon_devices"
+else
+    echo "Aucun beacon détecté."
+fi
+
+echo "Analyse Bluetooth terminée."
+```
 
 
 
