@@ -162,11 +162,12 @@ Pour compromettre une Raspberry Pi exposant Node-RED sans mot de passe :
 
 ###.....
 a continuer
-
+    
 
 ### Conclusion de cette première approche
 
 Cela fonctionne pour le wifi MAIS si la rasberry est en LAN alors cela fonctionnera de la meme manière mais l'attaquant devra etre sur le réseau LAN mais les leviers d'attaque son strictement les memes pour la rasberry PI mais les ESP ne sont plus accesible de cette manière la.
+Notre conslusion est la suivante, si le raspberry pi possède une pate sur le LAN et qu'il génére un wifi avec un mot de passe fort ainsi que l'utilisation d'un protocole de sécurisation comme wpa3. L'autre information est que l'attaquant ne sait pass comment fonctionne la raspi ainsi que les services utilisé. 
 
 
 ## Seconde approche le Bluethooth 
@@ -227,11 +228,11 @@ sudo hciconfig hci0 up
 echo "Recherche des appareils BLE à proximité. Patientez..."
 ble_scan_results=$(sudo hcitool lescan --duplicates 2>/dev/null)
 
-# Filtrer les ESP32
+# Filtrer les ESP32 A MODIF
 echo "Recherche des ESP32..."
 esp32_devices=$(echo "$ble_scan_results" | grep -i "ESP")
 
-# Filtrer les beacons
+# Filtrer les beacons A MODIF
 echo "Recherche des beacons..."
 beacon_devices=$(echo "$ble_scan_results" | grep -i "Beacon")
 
@@ -253,9 +254,22 @@ fi
 echo "Analyse Bluetooth terminée."
 ```
 
+### Utilisation de ces informations 
+
+
+
+### Conclusion de cette partie 
+
+La robustesse dépend, très grandement du wifi et de la capacité a ne pas trouver le mdp du wifi. Nous pouvons 
+
+
+## Conclusion 
+
 
 
 ---
 Man, on a deja des infos et des acces Wifi,
 
 peut on recup des donnés? des trames , des id ect..
+
+Ibeacon 
