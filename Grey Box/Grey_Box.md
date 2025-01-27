@@ -162,12 +162,13 @@ Pour compromettre une Raspberry Pi exposant Node-RED sans mot de passe :
 
 ###.....
 a continuer
-    
+
 
 ### Conclusion de cette première approche
 
-Cela fonctionne pour le wifi MAIS si la rasberry est en LAN alors cela fonctionnera de la meme manière mais l'attaquant devra etre sur le réseau LAN mais les leviers d'attaque son strictement les memes pour la rasberry PI mais les ESP ne sont plus accesible de cette manière la.
-Notre conslusion est la suivante, si le raspberry pi possède une pate sur le LAN et qu'il génére un wifi avec un mot de passe fort ainsi que l'utilisation d'un protocole de sécurisation comme wpa3. L'autre information est que l'attaquant ne sait pass comment fonctionne la raspi ainsi que les services utilisé. 
+Cela fonctionne pour le Wi-Fi, mais si la Raspberry Pi est connectée en LAN, le processus restera similaire. Cependant, l'attaquant devra être présent sur le réseau LAN. Les méthodes d'attaque pour la Raspberry Pi restent identiques, mais les ESP32 ne seront plus accessibles de cette manière.
+
+Notre conclusion est la suivante : si la Raspberry Pi est connectée au LAN et génère un réseau Wi-Fi avec un mot de passe fort et utilise un protocole de sécurisation tel que WPA3, les risques d’attaque sont considérablement réduits. De plus, un autre facteur limitant pour l’attaquant est qu’il ne connaît ni le fonctionnement interne de la Raspberry Pi ni les services qu’elle utilise.
 
 
 ## Seconde approche le Bluethooth 
@@ -253,23 +254,102 @@ fi
 
 echo "Analyse Bluetooth terminée."
 ```
+Ce script utilise les outils hciconfig, hcitool, et des commandes classiques comme grep et awk pour détecter et filtrer les appareils BLE. Il automatise la recherche des ESP32 et beacons dans l’environnement Bluetooth.
+L’objectif principal est de permettre une identification rapide des périphériques pertinents, en rendant les résultats exploitables pour des analyses ou des actions ultérieures.
 
 ### Utilisation de ces informations 
 
+#### Déni de Service et Spoofing pour Usurper un Capteur de Présence
 
+Dans le cadre de notre système de gestion de présence, une attaque combinant **déni de service (DoS)** et **spoofing** pourrait permettre à un attaquant de se faire passer pour un capteur Bluetooth légitime.L’objectif serait de simuler une présence en cours sans y etre présent.
+
+---
+
+##### Étapes de l'Attaque
+
+1. **Déni de Service sur le Capteur Légitime :**
+   - L'attaquant provoque une surcharge ou perturbe les communications du capteur légitime en émettant un grand nombre de paquets malformés ou en utilisant des outils pour occuper le canal Bluetooth.
+   - Cela rend le capteur incapable de communiquer avec le système central (Raspberry Pi).
+
+2. **Spoofing pour Usurper le Capteur :**
+   - L'attaquant configure un appareil Bluetooth (comme un smartphone ou un autre ESP32) pour imiter les caractéristiques du capteur légitime, notamment son adresse MAC, son nom et ses services (mqtt).
+   - L’appareil usurpé émet des signaux que le système interprète comme provenant du capteur légitime.
+
+3. **Simulation de Présence :**
+   - En diffusant des données identiques à celles attendues par le système (comme un identifiant unique), l'attaquant trompe le système en lui faisant croire qu’il est physiquement présent dans la salle.
+
+---
+
+##### Contre-Mesures pour se Protéger
+
+1. **Authentification Renforcée :**
+   - Implémenter des protocoles d'authentification Bluetooth sécurisés (ex. **Bluetooth LE Secure Connections**) pour valider les appareils connectés.
+   - Associer chaque capteur à une clé cryptographique unique pour empêcher l’usurpation.
+
+2. **Rotation des Identifiants :**
+   - Configurer les capteurs pour qu’ils changent régulièrement leur adresse MAC et autres identifiants, ce qui complique le spoofing.
+   - Ajouter un système de vérification dynamique qui s’assure que l’appareil répond correctement à des défis sécurisés.
+
+3. **Signalisation d’Absence de Communication :**
+   - Configurer le système pour signaler les périodes prolongées sans réponse du capteur légitime, ce qui permet de détecter les attaques de DoS rapidement.
+
+4. **Un password complexe sur le wifi :**
+   - Meme si l'attaquant usurpe l'esp, celui-ci n'ayant pas le mot de passe du réseau wifi permettant l'échange d'information sur la présence celui-ci devient bloqué. 
+
+---
+
+#### Attaque par Usurpation à l'aide d'une Liste Blanche
+
+Une autre attaque efficace contre un système basé sur une **whitelist** (liste blanche) consiste à exploiter le manque de validation rigoureuse des identifiants Bluetooth pour simuler la présence d'utilisateurs autorisés. L'attaque s'appuie sur la création de faux beacons via des applications spécifiques sur un téléphone portable, permettant de répliquer les informations des dispositifs légitimes.
+
+---
+
+##### Étapes de l'Attaque
+
+1. **Création de Faux Beacons :**
+   - À l'aide d'applications comme **Beacon Simulator** (Android) ou **LightBlue** (iOS), l'attaquant configure un ou plusieurs beacons simulés.
+   - Ces faux beacons émettent des informations copiées depuis des dispositifs autorisés (par exemple, via une observation préalable).
+
+2. **Simulation des Identifiants Autorisés :**
+   - L'attaquant configure les beacons pour imiter les **adresses MAC Bluetooth**, les **UUID**, et les **minor/major values** des appareils inscrits dans la liste blanche.
+   - Si l'attaquant connaît les identifiants de plusieurs amis, il peut simuler leur présence en même temps.
+
+3. **Diffusion des Données Trompeuses :**
+   - Les faux beacons émettent les informations attendues par le système, qui les interprète comme provenant d'appareils légitimes inscrits dans la liste blanche.
+
+4. **Bypass du Système de Présence :**
+   - Le système enregistre les faux beacons comme des utilisateurs légitimes et marque ces derniers comme présents.
+
+---
+
+
+##### Contre-Mesures pour se Protéger
+
+1. **Validation Renforcée des Identifiants :**
+   - Associer chaque appareil autorisé à une **clé cryptographique unique** ou à un certificat.
+
+2. **Détection des Anomalies :**
+   - Analyser le comportement des beacons pour repérer des activités suspectes, comme des émissions simultanées depuis une même source physique.
+
+3. **Rotation des Identifiants :**
+   - Modifier régulièrement les UUID et autres identifiants des appareils inscrits dans la liste blanche, ce qui rend les informations précédemment collectées obsolètes.
+
+---
+
+### Conclusion
+
+L’attaque via un système de whitelist exploite la confiance excessive dans des identifiants statiques et non sécurisés. Pour protéger le système, il est impératif d'introduire des mécanismes de validation plus robustes et de surveiller activement les comportements anormaux des appareils Bluetooth.
 
 ### Conclusion de cette partie 
 
-La robustesse dépend, très grandement du wifi et de la capacité a ne pas trouver le mdp du wifi. Nous pouvons 
+Le **Bluetooth** représente probablement la zone la plus vulnérable dans le système, principalement en raison de la facilité avec laquelle un attaquant peut exploiter ses faiblesses. Il est en effet simple de :
+
+- **Se faire passer pour un ESP32** : En imitant les identifiants uniques (adresse MAC, UUID, etc.) d'un dispositif légitime, un attaquant peut se faire passer pour un capteur de présence ou un autre appareil autorisé.
+- **Créer de faux beacons** : À l'aide d'applications accessibles au grand public, il est possible de simuler plusieurs beacons en émettant des données modifiées, telles que l’adresse MAC ou les UUID de ses amis, ce qui rend ces derniers virtuellement présents dans le système.
+
+Cette simplicité d'attaque souligne l'importance de trouver des petits stratagèmes pour empêcher cela, comme l'utilisation d'un UUID changeant et la vérification des distances.
 
 
 ## Conclusion 
 
-
-
----
-Man, on a deja des infos et des acces Wifi,
-
-peut on recup des donnés? des trames , des id ect..
-
-Ibeacon 
+SSID caché la conclusion
