@@ -352,4 +352,27 @@ Cette simplicité d'attaque souligne l'importance de trouver des petits stratag�
 
 ## Conclusion 
 
-SSID caché la conclusion
+Corrigé :  
+
+Il existe forcément des vulnérabilités et des méthodes pour compromettre le système. Un système parfait n'existe pas.  
+
+Néanmoins, nous pouvons établir une série de recommandations pour sécuriser l’ensemble du système :  
+
+### **Wi-Fi**  
+- Utiliser un mot de passe robuste  
+- Cacher le SSID  
+- Employer un protocole de sécurisation de dernière génération (WPA3)  
+
+### **Bluetooth**  
+- Mettre en place les protections mentionnées précédemment (UUID dynamique, vérification des distances, etc.)  
+
+### **Recommandations générales**  
+- **Des mots de passe robustes et sécurisés** : pour Node-RED, le Wi-Fi, le broker MQTT. Les identifiants utilisés sur la Raspberry Pi ne doivent pas être ceux par défaut.  
+- **Minimiser les informations en clair** : éviter les trames contenant des identifiants et mots de passe, les fichiers de configuration stockant des informations sensibles en clair, etc.  
+- **Définir des rôles et droits d’accès précis** : chaque utilisateur doit avoir des permissions claires et limitées selon ses besoins.  
+
+### **Conclusion**  
+Les principaux risques pour le système proviennent en grande partie du **Bluetooth**, qui est une surface d’attaque facile à exploiter, et du **Wi-Fi**, qui doit être traité comme un bastion sécurisé pour éviter toute intrusion. La **Raspberry Pi** étant le sous-système critique, elle doit être particulièrement protégée pour garantir l’intégrité du système global.
+
+
+
