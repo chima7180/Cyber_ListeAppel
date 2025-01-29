@@ -6,15 +6,15 @@ Ce dépôt contient l'analyse de sécurité du système Liste d'Appel, réalisé
 
 Le dépôt est organisé en trois dossiers correspondant aux différentes approches d'audit de sécurité :
 
-[Black Box](./Black%20Box/Black_Box.md)  
+[Black Box](./Black_Box/Black_Box.md)  
 
 Évaluation sans aucune information préalable, comme si l'attaquant n'avait aucun accès ni connaissance du système.
 
-[Grey Box](./Grey%20Box/Grey_Box.md)  
+[Grey Box](./Grey_Box/Grey_Box.md)  
 
 Audit avec des informations partielles, par exemple l'accès au réseau WiFi, permettant d'identifier des vulnérabilités plus précises.
 
-[White Box](./White%20Box/White_Box.md) 
+[White Box](./White_Box/White_Box.md) 
 
 Analyse réalisée avec un accès complet au code et aux infrastructures, comme un membre de l'équipe de développement.
 
