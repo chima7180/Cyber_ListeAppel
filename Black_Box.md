@@ -22,7 +22,7 @@ En utilisant des outils simples comme Airodump-ng ou des applications gratuites 
 Le but est d'identifier le réseau Wi-Fi cible puis de repérer les appareils connectés (Raspberry Pi, ESP32, etc.).
 
 #### Limites :
-Si le réseau est masqué ou utilise WPA3, il sera difficile d’en tirer beaucoup d'informations. Pourquoi ? 
+Si le réseau est masqué ou utilise WPA3, il sera difficile d’en tirer beaucoup d'informations. 
 
 ---
 
