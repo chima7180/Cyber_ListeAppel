@@ -160,9 +160,31 @@ Pour compromettre une Raspberry Pi exposant Node-RED sans mot de passe :
 
 **Conclusion** : Une installation de base de Node-RED sans mot de passe rend la Raspberry Pi vulnérable à des accès non autorisés, particulièrement dans un environnement réseau partagé comme c'est le cas ici.
 
-###.....
-a continuer
 
+#### **Attaque Man-in-the-Middle (MITM) : Interception et Manipulation des Communications**  
+
+Une attaque **Man-in-the-Middle (MITM)** est une méthode couramment utilisée par les attaquants pour intercepter et potentiellement altérer les communications entre deux appareils sans que ces derniers ne s'en rendent compte. Dans un réseau Wi-Fi, une telle attaque peut être particulièrement efficace, notamment si le réseau est mal sécurisé ou si des protocoles non chiffrés sont utilisés.  
+
+##### **Principe de l'attaque MITM**  
+
+L'attaquant se positionne entre deux appareils, comme une **Raspberry Pi** Il peut alors :  
+- **Espionner les échanges** : Capturer les données échangées, comme des identifiants de connexion, des messages MQTT, ou des trames HTTP en clair.  
+- **Modifier les communications** : Injecter de fausses données pour perturber le système, envoyer des commandes malveillantes, ou encore manipuler les réponses du serveur.  
+
+##### **Méthodes d'attaque MITM sur un réseau Wi-Fi**  
+
+1. **ARP Spoofing** : L'attaquant envoie beaucoup de fausses réponses ARP (protocole de couche 2 (MAC)) pour se faire passer pour le routeur, redirigeant ainsi tout le trafic vers lui.  
+2. **ICMP Redirect** : Permet à un attaquant d’induire en erreur les appareils du réseau en leur envoyant des messages ICMP falsifiés, les incitant ainsi à rediriger leur trafic via la machine de l’attaquant.
+3. **Fake Access Point** : L'attaquant crée un faux réseau Wi-Fi avec le même nom (SSID) qu'un réseau légitime pour inciter les victimes à s'y connecter.  
+
+##### **Moyens de protection contre une attaque MITM**  
+
+Pour limiter les risques liés à une attaque MITM, plusieurs mesures de sécurité doivent être mises en place :  
+- **Utiliser des protocoles chiffrés** : Toujours privilégier **HTTPS**, **MQTT avec TLS**, et éviter les communications non sécurisées.  
+- **Activer la protection ARP** : Sur le routeur, activer l'**ARP Binding** pour empêcher les attaques ARP Spoofing.  
+- **Détecter les attaques MITM** : Des outils comme **arpwatch**, **Wireshark** ou **Bettercap** permettent de repérer les anomalies réseau.  
+
+**Conclusion** : En appliquant ces mesures, il devient plus difficile pour un attaquant d'intercepter et manipuler les communications de notre système.
 
 ### Conclusion de cette première approche
 
