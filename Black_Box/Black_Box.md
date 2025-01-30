@@ -212,7 +212,7 @@ Si l’appareil cible utilise un chiffrement ou des UUID dynamiques, cela devien
 ---
 
 ### Conclusion Bluetooth
-Un étudiant avec peu de ressources pourrait :
+Un attaquant avec peu de ressources pourrait :
 - Accéder à des services BLE ouverts ou mal configurés.
 - Perturber les communications via un déni de service BLE.
 - Les attaques plus complexes comme le spoofing ou le cracking du PIN nécessitent davantage de connaissances et de matériel.
@@ -222,11 +222,11 @@ Un étudiant avec peu de ressources pourrait :
 ## Résumé final
 
 ### Wi-Fi : 
-Les attaques réalistes pour un étudiant seraient :
+Les attaques réalistes seraient :
 - Le déni de service (DoS) pour perturber le système.
 - Une tentative d’attaque Evil Twin, mais avec un succès limité si des protections existent.
 
 ### Bluetooth : 
-Les attaques réalistes pour un étudiant seraient :
+Les attaques réalistes seraient :
 - L’accès à des services BLE mal protégés (si présents).
 - Les attaques avancées seraient trop complexes à réaliser sans ressources importantes.
