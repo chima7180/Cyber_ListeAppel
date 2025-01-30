@@ -9,7 +9,7 @@ On va structurer notre approche a travers les deux seuls technologies qui puisse
 
 ## WIFI
 
-### Étape 1 : Reconnaissance du réseau Wi-Fi
+### Étape 1 : Reconnaissance du réseau WIFI
 
 L'attaquant commence par une phase d'observation et de collecte d'informations.
 
@@ -27,9 +27,9 @@ Si le réseau est masqué ou utilise WPA3, il sera difficile d’en tirer beauco
 ---
 
 Il va aussi chercher à détecter des requêtes probe :
-Une requête probe est un message envoyé par un appareil pour rechercher un réseau Wi-Fi spécifique ou annoncer qu'il est prêt à se connecter.
+Une requête probe est un message envoyé par un appareil pour rechercher un réseau WIFI spécifique ou annoncer qu'il est prêt à se connecter.
 Ces requêtes peuvent contenir :
-- Le SSID (nom du réseau Wi-Fi) recherché.
+- Le SSID (nom du réseau WIFI) recherché.
 - L’adresse MAC de l’appareil.
 - Des informations sur les capacités de l’appareil (types de cryptage pris en charge, fréquence, etc.).
 
@@ -37,19 +37,20 @@ Ces requêtes peuvent contenir :
 Il va surveiller les requêtes probe (des appareils cherchant à se connecter au réseau).
 
 #### Objectif : 
-Il veut pouvoir identifier les appareils qui communiquent avec le Wi-Fi (par exemple, les ESP32 ou smartphones des élèves).
+Il veut pouvoir identifier les appareils qui communiquent avec le WIFI (par exemple, les ESP32 ou smartphones des élèves).
 
-#### Outils possibles : Wireshark, Bettercap, ou tout outil d’analyse réseau gratuit.
+#### Outils possibles : 
+Wireshark, Bettercap, ou tout outil d’analyse réseau gratuit.
 
 --- 
 
 ### Étape 2 : Tentatives d’attaques possibles
 
-#### Surcharge du Wi-Fi (attaque de déni de service - DoS)
+#### Surcharge du WIFI (attaque de déni de service - DoS)
 
 ##### Principe :
 
-L'attaquant envoie un grand nombre de requêtes ou de paquets pour saturer le point d'accès Wi-Fi, ce qui entraîne des déconnexions ou un arrêt temporaire du service.
+L'attaquant envoie un grand nombre de requêtes ou de paquets pour saturer le point d'accès WIFI, ce qui entraîne des déconnexions ou un arrêt temporaire du service.
 
 ##### Méthodes possibles :
 
@@ -83,26 +84,26 @@ Faible probabilité de détection de l’attaque si l’infrastructure ne survei
 L'attaquant crée un faux point d'accès avec le même SSID que le réseau cible.
 Les appareils légitimes (ou les élèves) peuvent accidentellement se connecter au faux point d’accès.
 
-Outil : Airbase-ng ou des outils comme WiFi Pineapple.
+Outil : Airbase-ng ou des outils comme WIFI Pineapple.
 
 Exemple :
 ```
-airbase-ng -e "Nom_du_WiFi_cible" -c 6 wlan0
+airbase-ng -e "Nom_du_WIFI_cible" -c 6 wlan0
 ```
 
 ##### Objectif :
-L'attaquant veut capturer les identifiants Wi-Fi ou intercepter les données échangées pour simuler une détection incorrecte des élèves en manipulant les données.
+L'attaquant veut capturer les identifiants WIFI ou intercepter les données échangées pour simuler une détection incorrecte des élèves en manipulant les données.
 
 ##### Limites :
-Cela nécessite des ressources matérielles supplémentaires (une antenne Wi-Fi puissante).
+Cela nécessite des ressources matérielles supplémentaires (une antenne WIFI puissante).
 Et si le système utilise un chiffrement fort (WPA2/WPA3), cela limite l’accès aux données sensibles.
 
 ---
 
-#### Brute force sur la clé Wi-Fi
+#### Brute force sur la clé WIFI
 
 ##### Principe :
-L'attaquant capture un handshake (échange initial entre un appareil et le point d'accès) pour essayer de casser la clé Wi-Fi.
+L'attaquant capture un handshake (échange initial entre un appareil et le point d'accès) pour essayer de casser la clé WIFI.
 
 Outil : Aircrack-ng, hashcat.
 
@@ -120,11 +121,11 @@ aircrack-ng -w wordlist.txt -b [MAC_point_d'accès] capture.cap
 
 #### Limites:
 Il est nécessaire d'avoir un dictionnaire de mots de passe ou beaucoup de puissance de calcul (surtout contre WPA2/WPA3).
-Deplus, si la clé Wi-Fi est robuste (aléatoire et longue), l’attaque échouera probablement.
+Deplus, si la clé WIFI est robuste (aléatoire et longue), l’attaque échouera probablement.
 
 ---
 
-### Conclusion Wi-Fi
+### Conclusion WIFI
 
 Un attaquant avec peu de ressources pourrait réussir :
 
@@ -138,7 +139,7 @@ Un attaquant avec peu de ressources pourrait réussir :
 
 ### Étape 1 : Reconnaissance des appareils Bluetooth
 
-Comme pour le WiFi l'attaquant comment par une phase d'observation et va faire un scan des appareils Bluetooth et des services BLE.
+Comme pour le WIFI l'attaquant comment par une phase d'observation et va faire un scan des appareils Bluetooth et des services BLE.
 
 
 #### Action : 
@@ -212,7 +213,7 @@ Si l’appareil cible utilise un chiffrement ou des UUID dynamiques, cela devien
 ---
 
 ### Conclusion Bluetooth
-Un étudiant avec peu de ressources pourrait :
+Un attaquant avec peu de ressources pourrait :
 - Accéder à des services BLE ouverts ou mal configurés.
 - Perturber les communications via un déni de service BLE.
 - Les attaques plus complexes comme le spoofing ou le cracking du PIN nécessitent davantage de connaissances et de matériel.
@@ -221,12 +222,12 @@ Un étudiant avec peu de ressources pourrait :
 
 ## Résumé final
 
-### Wi-Fi : 
-Les attaques réalistes pour un étudiant seraient :
+### WIFI : 
+Les attaques réalistes seraient :
 - Le déni de service (DoS) pour perturber le système.
 - Une tentative d’attaque Evil Twin, mais avec un succès limité si des protections existent.
 
 ### Bluetooth : 
-Les attaques réalistes pour un étudiant seraient :
+Les attaques réalistes seraient :
 - L’accès à des services BLE mal protégés (si présents).
 - Les attaques avancées seraient trop complexes à réaliser sans ressources importantes.
