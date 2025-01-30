@@ -100,7 +100,7 @@ raspberry_ip=$(echo "$scan_results" | grep -i "raspberry" -B 2 | grep "Nmap scan
 
 if [ -z "$raspberry_ip" ]; then
     echo "Aucune Raspberry Pi détectée sur le réseau $network_range."
-else
+else  
     echo "Raspberry Pi détectée avec l'adresse IP : $raspberry_ip"
     # Scanner les ports ouverts et détecter l'OS pour l'adresse IP de la Raspberry Pi
     echo "Analyse des ports ouverts et du système d'exploitation pour $raspberry_ip..."
